@@ -1,0 +1,55 @@
+name: 'Example Action'
+description: 'Example GitHub action for scanning code'
+author: 'Example'
+inputs:
+  scanType:
+    required: true
+    type: string
+    description: Type of scan to perform. Must be one of "static", "sca", "secret" or "iac
+  sdbPath:
+    required: true
+    type: string
+    description: 'Sample DB path from where a secret to be read'
+  sampleUsernameKey:
+    required: true
+    type: string
+    description: 'sample SDB Username keyname'
+  samplePasswordKey:
+    required: true
+    type: string
+    description: 'sample SDB Password keyname'
+  sampleUrl:
+    required: true
+    type: string
+    default: "https://prod.sample.com"
+    description: 'sample SDB path from where a secret to be read'
+  sampleRegion:
+    required: true
+    type: string
+    default: "us-west-2"
+    description: 'sample Region to authenticate with'
+  actionPAT:
+    required: true
+    type: string
+    description: 'GitHub Action PAT'
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Process scan request
+      env:
+        SCAN_USRRNAME: sampleUser
+        SCAN_PASSWORD: samplePassword
+        GITHUB_ACTOR: "${{ github.actor }}_github-actions_${{ github.run_number }}_${{ inputs.scanType }}"
+        GITHUB_TOKEN: ${{ inputs.actionPAT }}
+      shell: bash
+      run: |
+        branch=${{ github.ref_name }}
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          branch=${{ github.head_ref }}
+        else
+          branch=${{ github.ref_name }}
+        fi
+        pip install -r requirements.txt
+        python scan.py --type '${{ inputs.scanType }}' --repo '${{ github.event.repository.html_url }}' --branch '$branch'

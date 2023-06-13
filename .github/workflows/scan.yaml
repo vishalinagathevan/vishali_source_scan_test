@@ -1,0 +1,29 @@
+name: Scan
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/**
+
+jobs:
+  Sample:
+    runs-on: [ubuntu-latest]
+
+    strategy:
+      matrix:
+        # scanType: ["static", "sca", "secret"]
+        scanType: ["static"]
+      max-parallel: 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Scan ${{ matrix.scanType }}
+        uses: ./
+        with:
+          scanType: ${{ matrix.scanType }}
+          sdbPath: shared/sampleadserviceaccounts/A.GITHUB.SECURECODE
+          sampleUsernameKey: SERVICE_ACCOUNT_USERNAME
+          samplePasswordKey: SERVICE_ACCOUNT_PASSWORD
+          actionPAT: ${{ secrets.GITHUB_TOKEN }}
