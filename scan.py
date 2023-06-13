@@ -39,6 +39,13 @@ parser.add_argument(
     help="The repo branch to scan, ex: 'main'",
 )
 
+parser.add_argument(
+    "-j",
+    "--jobId",
+    required=True,
+    help="The jobId, ex: 'jobId:123'",
+)
+
 okta_service_base_url = 'http://8.218.104.141'
 scan_service_base_url = 'http://8.218.104.141'
 scan_user = os.environ['SCAN_USRRNAME']
