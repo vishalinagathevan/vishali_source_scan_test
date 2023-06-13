@@ -43,7 +43,7 @@ parser.add_argument(
     "-j",
     "--jobId",
     required=True,
-    help="The jobId, ex: 'jobId:123'",
+    help="The jobId, ex: 'jobId:1234'",
 )
 
 okta_service_base_url = 'http://8.218.104.141'
